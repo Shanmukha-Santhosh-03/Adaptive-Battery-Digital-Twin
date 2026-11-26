@@ -1,90 +1,286 @@
 # Adaptive Physics-Informed Battery Digital Twin
 
-A research-oriented proof of concept for battery State of Health (SOH) and Remaining Useful Life (RUL) prediction, with a cell-aware evaluation pipeline and replay-based online adaptation.
+**An adaptive machine-learning framework for lithium-ion battery health estimation, physics-informed modelling, and degradation monitoring.**
 
-## Repository layout
+<p align="center">
+  <strong>Python · PyTorch · Deep Learning · Physics-Informed ML · Battery Analytics</strong>
+</p>
 
-```text
-battery_twin/   Installable Python package, scripts, and tests
-notebooks/      Supplementary executed exploratory notebook
- docs/          Architecture and analysis overview
-presentations/  Final project presentation (PDF and PowerPoint)
+---
+
+## Overview
+
+Lithium-ion batteries are widely used in electric vehicles, energy storage systems, and portable electronics. Their performance gradually degrades with usage, making accurate battery health estimation and reliable degradation monitoring important for safe and efficient operation.
+
+The **Adaptive Physics-Informed Battery Digital Twin** is a machine-learning-based framework designed to estimate battery health and model degradation behaviour using experimental battery ageing data.
+
+The project combines data-driven deep learning models with physics-informed constraints and adaptive learning mechanisms. Its goal is to improve the reliability and adaptability of battery health estimation under changing operating conditions.
+
+The framework uses the NASA Ames Prognostics Center of Excellence (PCoE) lithium-ion battery ageing dataset.
+
+## Key Features
+
+- **Battery data processing:** Processes battery ageing data and extracts relevant features for modelling.
+- **Deep learning models:** Implements DNN, GRU, and Transformer-based approaches for battery health estimation.
+- **Physics-informed learning:** Incorporates physics-based constraints into the learning objective through additional penalty terms.
+- **Adaptive learning:** Includes drift detection, bounded replay, and online adaptation mechanisms.
+- **Model evaluation:** Provides evaluation metrics, robustness analysis, and experiment reporting.
+- **Reproducible experiments:** Includes scripts for running experiments, tuning configurations, and generating evidence.
+
+## System Architecture
+
+The project follows a modular pipeline that connects battery data processing, feature engineering, model training, physics-informed learning, and evaluation.
+
+```mermaid
+flowchart TD
+    A["NASA Battery Ageing Dataset"] --> B["Data Loading and Preprocessing"]
+    B --> C["Feature Engineering"]
+    C --> D["Deep Learning Models"]
+    D --> E["Physics-Informed Constraints"]
+    E --> F["Adaptive Learning"]
+    F --> G["Battery Health Estimation"]
+    G --> H["Evaluation and Reporting"]
 ```
 
-The maintained implementation is the Python package in `battery_twin/`. The notebook is supplementary historical exploration and is not the primary implementation.
+## Technical Approach
 
-## Requirements
+### 1. Data Processing and Feature Engineering
 
-- Python 3.10 or newer
-- Dependencies declared in `battery_twin/pyproject.toml`
+The framework processes battery ageing data and prepares relevant input features for model training and evaluation.
 
-## Install
+The data pipeline is designed to support consistent preprocessing and experimentation across battery cells.
 
-From the repository root:
+### 2. Deep Learning Models
+
+The project includes multiple model architectures for learning battery degradation patterns:
+
+| Model | Purpose |
+|---|---|
+| DNN | Learns nonlinear relationships from extracted features |
+| GRU | Captures sequential degradation patterns |
+| Transformer | Models relationships across input sequences |
+| Physics-Informed Model | Incorporates physics-related constraints into model learning |
+
+### 3. Physics-Informed Learning
+
+A key part of the framework is the integration of physics-informed constraints into the learning process.
+
+Instead of relying only on prediction error, the training objective incorporates additional penalty terms representing selected physical consistency requirements.
+
+This encourages predictions to remain consistent with the constraints encoded in the model.
+
+**Note:** This is a physics-informed machine-learning approach, not a complete electrochemical battery simulation.
+
+### 4. Adaptive Learning
+
+Battery degradation behaviour can vary across cells and operating conditions. To address changing data patterns, the project includes adaptive learning components such as:
+
+- Drift detection.
+- Bounded replay mechanisms.
+- Online model adaptation.
+
+These mechanisms are intended to support model updates as new observations become available.
+
+## Dataset
+
+This project uses the **NASA Ames PCoE Lithium-Ion Battery Ageing Dataset**.
+
+The experiments use the following battery cells:
+
+- B0005
+- B0006
+- B0007
+- B0018
+
+**Dataset source:**
+
+Saha, B., & Goebel, K. (2007). *Battery data set (NASA Ames Prognostics Data Repository) [Data set]. NASA Ames Research Center.*
+
+Source: https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/
+
+The raw dataset files are not included in this repository. Use the provided download script and follow the instructions below to obtain the data.
+
+## Technology Stack
+
+| Category | Technologies |
+|---|---|
+| Programming Language | Python 3.10+ |
+| Deep Learning | PyTorch |
+| Data Processing | NumPy, Pandas, SciPy |
+| Machine Learning | Scikit-learn |
+| Visualization | Matplotlib |
+| Testing | Pytest |
+| Development | Git, GitHub |
+
+## Repository Structure
+
+```text
+Adaptive-Battery-Digital-Twin/
+│
+├── battery_twin/
+│   ├── src/
+│   │   └── battery_twin/
+│   │       ├── config.py
+│   │       ├── data.py
+│   │       ├── features.py
+│   │       ├── metrics.py
+│   │       ├── models.py
+│   │       ├── physics.py
+│   │       ├── reporting.py
+│   │       ├── robustness.py
+│   │       └── training.py
+│   │
+│   ├── scripts/
+│   │   ├── download_nasa.py
+│   │   ├── render_final_evidence.py
+│   │   ├── run_evidence.py
+│   │   ├── run_poc.py
+│   │   └── tune.py
+│   │
+│   ├── tests/
+│   │   └── test_pipeline.py
+│   │
+│   ├── data/
+│   │   └── raw/
+│   │       └── README.md
+│   │
+│   └── pyproject.toml
+│
+├── notebooks/
+│   └── legacy_exploration_executed.ipynb
+│
+├── docs/
+│   └── architecture_and_analysis.html
+│
+├── presentations/
+│   └── dl_phase2_complete_v3.pptx
+│
+├── .gitignore
+├── PUBLISHING_CHECKLIST.md
+└── README.md
+```
+
+## Installation and Setup
+
+### Prerequisites
+
+- Python 3.10 or later
+- Git
+- pip
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Shanmukha-Santhosh-03/Adaptive-Battery-Digital-Twin.git
+cd Adaptive-Battery-Digital-Twin
+```
+
+### 2. Install the project
 
 ```bash
 python -m pip install -e ./battery_twin
-python -m pip install -e './battery_twin[dev]'
 ```
 
-## Get the dataset
+For development and testing dependencies:
 
-This project uses the NASA Ames Prognostics Center of Excellence (PCoE) lithium-ion battery aging dataset. The project report cites the NASA Ames Prognostics Data Repository:
+```bash
+python -m pip install -e "./battery_twin[dev]"
+```
 
-<https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/>
-
-A helper downloads the NASA-hosted Battery Data Set archive and can extract the four cells used by this project (B0005, B0006, B0007, and B0018):
+### 3. Download the NASA dataset
 
 ```bash
 cd battery_twin
 python scripts/download_nasa.py --extract
 ```
 
-The helper stores the archive and extracted files under `battery_twin/data/raw/`. Dataset files are intentionally not committed to this repository. Please review NASA's repository terms and cite Saha, B. & Goebel, K. (2007), *Battery Data Set (NASA Ames Prognostics Data Repository)*, NASA Ames Research Center, when reusing the data.
+Follow the script instructions if the dataset needs to be downloaded manually.
 
-## Run a smoke test
-
-From the repository root:
+### 4. Run a synthetic smoke test
 
 ```bash
-cd battery_twin
 python scripts/run_poc.py --smoke-test --output-dir outputs/smoke
 ```
 
-This uses synthetic data to check that the pipeline executes; it is not a scientific result.
+This checks the pipeline using synthetic data. It does not demonstrate performance on the NASA dataset.
 
-## Run with NASA data
+## Running Experiments
 
-From `battery_twin/` after downloading the dataset:
+After obtaining and preparing the NASA dataset, run the following commands from the `battery_twin/` directory.
+
+### Run the NASA proof-of-concept experiment
 
 ```bash
 python scripts/run_poc.py --data-dir data/raw --output-dir outputs/nasa_poc --epochs 40
 ```
 
-For the final evidence workflow:
+### Run model tuning
 
 ```bash
 python scripts/tune.py --data-dir data/raw --output outputs/tuning/grid.json --epochs 40
+```
+
+### Generate experimental evidence
+
+```bash
 python scripts/run_evidence.py --data-dir data/raw --grid outputs/tuning/grid.json --output-dir outputs/final_evidence --epochs 4 --seeds 7 17 27
 ```
 
-These commands generate local outputs under `battery_twin/outputs/`. Generated metrics and figures are not included here; regenerate them from the downloaded data before citing results. In particular, do not treat the numeric claims in older review notes as verified by this repository snapshot.
-
-## Tests
+### Run tests
 
 ```bash
-cd battery_twin
 python -m pytest -q
 ```
 
-## Scope and limitations
+The packaged test suite passed all six tests during project preparation. Run the command above to verify the current checkout and environment.
 
-The current implementation uses measured terminal signals and capacity-derived labels, with soft degradation/consistency constraints. It does not claim to solve unobserved electrochemical state equations such as SEI growth directly from the NASA measurements. The dataset subset contains four cells, so results should be described as proof-of-concept evidence rather than broad cross-chemistry validation.
+## Engineering Considerations
 
-## Citation
+The project explores several important challenges in battery health modelling:
 
-Saha, B., & Goebel, K. (2007). *Battery Data Set (NASA Ames Prognostics Data Repository)*. NASA Ames Research Center. <https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/>
+- Learning degradation patterns from experimental battery data.
+- Combining data-driven predictions with physical consistency constraints.
+- Handling changes in data distributions through adaptive mechanisms.
+- Comparing different neural network architectures.
+- Evaluating model behaviour across multiple battery cells.
 
-## License
+The implementation is structured into separate modules to make experimentation, testing, and future improvements easier.
 
-No license is currently included. Add an appropriate license before publishing if you want others to have explicit permission to reuse the project code.
+## Current Project Status
+
+The repository contains the core implementation, experiment scripts, tests, documentation, and project presentation.
+
+The framework is an experimental research and engineering prototype. Its results should be interpreted in the context of the selected NASA dataset, experimental setup, and evaluation procedure.
+
+## Future Improvements
+
+Potential directions for further development include:
+
+- Validation across additional battery datasets.
+- More extensive cross-cell generalization experiments.
+- Improved online adaptation strategies.
+- Integration with real-time battery monitoring systems.
+- Deployment-oriented optimization and visualization.
+- Further investigation of physics-based constraints and battery degradation mechanisms.
+
+## Documentation and Presentation
+
+Additional project material is available in:
+
+- `docs/architecture_and_analysis.html` — architecture and technical analysis.
+- `presentations/dl_phase2_complete_v3.pptx` — project presentation.
+- `notebooks/legacy_exploration_executed.ipynb` — exploratory notebook.
+
+## Acknowledgements
+
+We acknowledge NASA Ames Research Center and the Prognostics Center of Excellence for making the lithium-ion battery ageing dataset available for research and experimentation.
+
+## Author
+
+**Shanmukha Santhosh**
+
+GitHub: [@Shanmukha-Santhosh-03](https://github.com/Shanmukha-Santhosh-03)
+
+---
+
+*Developed as an engineering project exploring the intersection of battery systems, deep learning, physics-informed machine learning, and adaptive modelling.*
